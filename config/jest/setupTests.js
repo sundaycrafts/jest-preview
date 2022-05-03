@@ -5,6 +5,7 @@ jestPreviewConfigure({
   externalCss: ['demo/global.css', 'demo/assets/_scss/global-style.scss'],
   publicFolder: 'demo/public',
   sassLoadPaths: ['demo/assets/_scss/loadPathsExample'],
+  autoPreview: true,
 });
 
 window.matchMedia = (query) => ({

@@ -74,6 +74,11 @@ const config = {
             label: 'GitHub',
             position: 'right',
           },
+          {
+            href: 'https://discord.gg/X5PyPUfemh',
+            label: 'Discord',
+            position: 'right',
+          },
         ],
       },
       footer: {
@@ -116,6 +121,10 @@ const config = {
                 label: 'GitHub',
                 href: 'https://github.com/nvh95/jest-preview',
               },
+              {
+                label: 'Discord',
+                href: 'https://discord.gg/X5PyPUfemh',
+              },
             ],
           },
         ],
@@ -126,6 +135,11 @@ const config = {
         darkTheme: darkCodeTheme,
       },
       image: 'img/social_image.png',
+      algolia: {
+        appId: 'GUSGTGYGR2',
+        apiKey: 'cf3e55e458b395eb8d21c2be25cef7f0',
+        indexName: 'jest-preview',
+      },
     }),
 };
 

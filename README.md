@@ -7,9 +7,9 @@
 </h1>
 
 <p align="center">
-Debug your Jest tests. Effortlessly. 🛠🖼 
+Debug your Jest tests. Effortlessly. 🛠🖼
 </p>
-  
+
 <p align="center">
   <img align="center" src="https://user-images.githubusercontent.com/8603085/162563155-7e18c9ef-4fe3-45f2-9065-7fcea8ddb18e.gif" alt="Jest Preview Demo" />
 </p>
@@ -20,7 +20,7 @@ Debug your Jest tests. Effortlessly. 🛠🖼
 
 <!-- prettier-ignore-start -->
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-9-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 <!-- prettier-ignore-end -->
 
@@ -32,9 +32,9 @@ Debug your Jest tests. Effortlessly. 🛠🖼
 
 ## Why **jest-preview**
 
-When writing tests using Jest, we usually debug by reading the HTML code. Sometimes the HTML is too complex and it's hard to imagine how the UI looks in our head. `jest-preview` initiates a server and serve your HTML in a browser, then you can see your actual UI visually. This way, it helps you debug jest tests faster.
+When writing tests using Jest, we usually debug by reading the HTML code. Sometimes, the HTML is too complicated to visualize the UI in our head. `jest-preview` initiates a server and serve your HTML in a browser, then you can see your actual UI visually, which helps you debug jest tests faster.
 
-`jest-preview` is initially design to work with [jest](https://jestjs.io/) and [react-testing-library](https://testing-library.com/docs/react-testing-library/intro/). However it's framework-agnostic and you can use it with any testing libraries.
+`jest-preview` is initially designed to work with [jest](https://jestjs.io/) and [react-testing-library](https://testing-library.com/docs/react-testing-library/intro/). The package is framework-agnostic, and you can use it with any testing libraries.
 
 ## Features
 
@@ -76,200 +76,22 @@ describe('App', () => {
 
 ## Examples
 
-- Use with [Vite](https://vitejs.dev/): [Example with Vite](https://github.com/nvh95/jest-preview/tree/main/examples/vite-react)
-- Use with [Create React App](https://create-react-app.dev/): [Example with CRA](https://github.com/nvh95/jest-preview/tree/main/examples/create-react-app)
+- Use with [Vite](https://vitejs.dev/): [Example with Vite](https://www.jest-preview.com/docs/examples/vite-react)
+- Use with [Create React App](https://create-react-app.dev/): [Example with CRA](https://www.jest-preview.com/docs/examples/create-react-app)
+- Use with [NextJs Rust Compiler](https://nextjs.org/docs/testing#setting-up-jest-with-the-rust-compiler): [Example with NextJs Rust Compiler](https://www.jest-preview.com/docs/examples/next-rust)
+- Use with [NextJS Babel](https://nextjs.org/docs/testing#setting-up-jest-with-babel): [Example with CRA](https://www.jest-preview.com/docs/examples/next-babel)
 
 ## Installation
 
-### 1. Install `jest-preview`
-
-```bash
-npm install --save-dev jest-preview
-# Or
-yarn add --dev jest-preview
-pnpm install --dev jest-preview
-```
-
-### 2. Configure jest's transform to transform CSS and files
-
-`jest-preview` comes with pre-configured transformations to handle CSS and files. This is a recommended way to configure. However, you can configure it yourself using exported transform functions as well. See [Advanced configurations](#advanced-configurations) for more.
-
-If you use [Sass](https://sass-lang.com/) in your project, make sure [sass](https://www.npmjs.com/package/sass) is already installed. Note that [Node Sass](https://www.npmjs.com/package/node-sass) and [LibSass](https://sass-lang.com/libsass) are [not supported](https://sass-lang.com/blog/libsass-is-deprecated).
-
-Update `jest.config.js`:
-
-```js
-transform: {
-  "^.+\\.(css|scss|sass)$": "jest-preview/transforms/css",
-  "^(?!.*\\.(js|jsx|mjs|cjs|ts|tsx|css|json)$)": "jest-preview/transforms/file",
-}
-```
-
-For Create React App users, please use `jest-preview/transforms/fileCRA` instead of `jest-preview/transforms/file`. See more at [examples/create-react-app/README.md](./examples/create-react-app/README.md#installation-and-usage)
-
-### 3. If you use CSS Modules, make sure it doesn't get ignored
-
-In most cases, CSS Modules is ignored in Jest environment. For example, Create React App default configuration ignores CSS Modules via [transformIgnorePatterns](https://github.com/facebook/create-react-app/blob/63bba07d584a769cfaf7699e0aab92ed99c3c57e/packages/react-scripts/scripts/utils/createJestConfig.js#L53) and [moduleNameMapper](https://github.com/facebook/create-react-app/blob/63bba07d584a769cfaf7699e0aab92ed99c3c57e/packages/react-scripts/scripts/utils/createJestConfig.js#L58). To make CSS Modules works with Jest Preview, we need to make sure it isn't ignored. Remove options to ignore CSS Modules or mapping using a third party library (such as [identity-obj-proxy](https://github.com/keyz/identity-obj-proxy)).
-
-```diff
-// jest.config.js
-transformIgnorePatterns: [
--  '^.+\\.module\\.(css|sass|scss)$',
-],
-moduleNameMapper: {
--  '^.+\\.module\\.(css|sass|scss)$': 'identity-obj-proxy',
-},
-```
-
-### 4. Clear your jest Cache
-
-Since we are updating our transformation code, make sure you clear your jest cache for new changes to take effect.
-
-```bash
-./node_modules/.bin/jest --clearCache
-# Or usually
-npm run test -- --clearCache
-```
-
-### 5. (Optional) Configure external CSS
-
-Sometimes, there are some CSS files imported outside your current test components (e.g: CSS imported in `src/index.js`, `src/main.tsx`). In this case, you can manually add those CSS files to `jest-preview` by `jestPreviewConfigure`. Notice that they should be path from root of your project.
-
-```js
-  // jest.config.js
-  {
-    setupFilesAfterEnv: ["./config/jest/setupTests.js"],
-  }
-```
-
-```js
-// ./config/jest/setupTests.js
-import { jestPreviewConfigure } from 'jest-preview';
-
-// Should be path from root of your project
-jestPreviewConfigure({
-  externalCss: [
-    'demo/global.css',
-    'demo/global.scss', // Sass
-    'node_modules/@your-design-system/css/dist/index.min.css', // css from node_modules
-    'node_modules/bootstrap/dist/css/bootstrap.min.css',
-  ],
-});
-```
-
-### 6. (Optional) Configure public folder
-
-You don't need to do anything if your public folder is `public`. However, if it's different, you can configure as following:
-
-<!-- To add Common public directories as msw does
- when we have a dedicated docs site. https://mswjs.io/docs/getting-started/integrate/browser#where-is-my-public-directory -->
-
-```js
-// ./config/jest/setupTests.js
-import { jestPreviewConfigure } from 'jest-preview';
-
-// Should be path from root of your project
-jestPreviewConfigure({
-  publicFolder: 'static', // No need to configure if `publicFolder` is `public`
-});
-```
+See the [Installation Guide](https://www.jest-preview.com/docs/getting-started/installation) on Jest Preview official website.
 
 ## Usage
 
-### 1. Update to `package.json`
-
-```json
-{
-  "scripts": {
-    "jest-preview": "jest-preview"
-  }
-}
-```
-
-Optionally, you can use `npm-run-all` to run jest and `jest-preview` server in parallel
-
-```json
-{
-  "scripts": {
-    "test:debug": "npm-run-all -p test jest-preview"
-  },
-  "devDependencies": {
-    "npm-run-all": "latest"
-  }
-}
-```
-
-### 2. Run the `jest-preview` server
-
-```bash
-# You can use PORT to customize port, default to 3336
-npm run jest-preview
-# Or
-yarn jest-preview
-pnpm run jest-preview
-```
-
-### 3. Preview your html from jest. Following code demo how to use it with [react-testing-library](https://testing-library.com/docs/react-testing-library/intro/)
-
-```javascript
-import preview from 'jest-preview';
-
-describe('App', () => {
-  it('should work as expected', () => {
-    render(<App />);
-
-    userEvent.click(screen.getByTestId('increase'));
-    userEvent.click(screen.getByTestId('increase'));
-
-    // Open http://localhost:3336 to see the preview
-    preview.debug();
-
-    expect(screen.getByTestId('count')).toContainHTML('2');
-  });
-});
-```
-
-Then visit http://localhost:3336 to see the preview
-
-<img alt="Preview your jest test in the browser" src="https://user-images.githubusercontent.com/8603085/161393898-7e283e38-6114-4064-9414-a0ce6d52361d.png" width="600" />
+See the [Usage Guide](https://www.jest-preview.com/docs/getting-started/usage) on Jest Preview official website.
 
 ## Advanced configurations
 
-You should use [Pre-configured transformation](#2-configure-jests-transform-to-transform-css-and-files) in most cases. However, if you have existing code transformation, you can use following provided ones as follow:
-
-- `processCss`: Process CSS files
-- `processFile`: Process files
-- `processFileCRA`: Process files for Create React App
-
-For examples:
-
-````js
-```javascript
-// config/jest/cssTransform.js
-'use strict';
-
-const { processCss } = require('jest-preview');
-
-module.exports = {
-  process(src, filename) {
-    return processCss(src, filename);
-  },
-};
-````
-
-```javascript
-// config/jest/fileTransform.js
-'use strict';
-
-const { processFile } = require('jest-preview');
-// Use processFileCRA for Create React App
-
-module.exports = {
-  process(src, filename) {
-    return processFile(src, filename); // Use processFileCRA for Create React App
-  },
-};
-```
+Jest Preview comes with [Pre-configured transformation](https://www.jest-preview.com/docs/getting-started/installation#2-configure-jests-transform-to-transform-css-and-files). However, in more advanced use cases where you have custom code transformation, check out the [Code Transformation Guide](https://www.jest-preview.com/docs/advanced-guides/code-transform).
 
 ## Upcoming features
 
@@ -322,6 +144,10 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/mattmurph9"><img src="https://avatars.githubusercontent.com/u/63432827?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Matt Murphy</b></sub></a><br /><a href="https://github.com/nvh95/jest-preview/commits?author=mattmurph9" title="Documentation">📖</a></td>
     <td align="center"><a href="https://www.linkedin.com/in/traitanit-huangsri-8701b291/"><img src="https://avatars.githubusercontent.com/u/8110002?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Traitanit Huangsri</b></sub></a><br /><a href="https://github.com/nvh95/jest-preview/commits?author=nottyo" title="Code">💻</a></td>
     <td align="center"><a href="http://linkedin.com/in/thanhsonng"><img src="https://avatars.githubusercontent.com/u/28614996?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Thanh Son Nguyen</b></sub></a><br /><a href="https://github.com/nvh95/jest-preview/commits?author=thanhsonng" title="Code">💻</a> <a href="#example-thanhsonng" title="Examples">💡</a> <a href="https://github.com/nvh95/jest-preview/commits?author=thanhsonng" title="Documentation">📖</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/minhmo1620"><img src="https://avatars.githubusercontent.com/u/44143370?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Minh Nguyen </b></sub></a><br /><a href="https://github.com/nvh95/jest-preview/commits?author=minhmo1620" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/tinhvqbk"><img src="https://avatars.githubusercontent.com/u/26925018?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Kyle(Tình Vũ)</b></sub></a><br /><a href="https://github.com/nvh95/jest-preview/issues?q=author%3Atinhvqbk" title="Bug reports">🐛</a></td>
   </tr>
 </table>
 

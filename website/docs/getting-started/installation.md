@@ -26,7 +26,9 @@ transform: {
 }
 ```
 
-For Create React App users, please use `jest-preview/transforms/fileCRA` instead of `jest-preview/transforms/file`. See more at [Create React App example](/docs/examples/create-react-app)
+For Create React App users, please use `jest-preview/transforms/fileCRA` instead of `jest-preview/transforms/file`. See more at [Create React App example](/docs/examples/create-react-app).
+
+For Next.js users with Rust-based compiler, please use [configureNextJestPreview](/docs/api/configureNextJestPreview) to config Jest. See more at [Next.js example](https://github.com/nvh95/jest-preview/tree/main/examples/nextjs).
 
 ### 3. If you use CSS Modules, make sure it doesn't get ignored
 
@@ -82,4 +84,12 @@ import { jestPreviewConfigure } from 'jest-preview';
 jestPreviewConfigure({
   publicFolder: 'static', // No need to configure if `publicFolder` is `public`
 });
+```
+
+### 5. (Optional- RECOMMENDED) Opt-in to Automatic Mode
+
+**Automatic Mode** let you use [jest-preview](https://www.npmjs.com/package/jest-preview) without manually triggering `preview.debug()`. It previews your code in the browser automatically whenever there is a failed test. It's a experimental feature from v0.2.0 and becomes the default in v0.3.0.
+
+```js
+jestPreviewConfigure({ autoPreview: true });
 ```
