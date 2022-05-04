@@ -16,6 +16,7 @@ interface JestPreviewConfigOptions {
 export async function jestPreviewConfigure(
   {
     externalCss = [],
+    sassLoadPaths = [],
     autoPreview = false,
     publicFolder,
   }: JestPreviewConfigOptions = {
@@ -34,16 +35,18 @@ export async function jestPreviewConfigure(
     });
   }
 
-  let sassLoadPaths: string[] = [];
-  // Save sassLoadPaths to cache, so we can use it in the transformer
+  let sassLoadPathsConfig: string[] = [];
+  // Save sassLoadPathsConfig to cache, so we can use it in the transformer
   if (sassLoadPaths) {
-    sassLoadPaths = sassLoadPaths.map((path) => `${process.cwd()}/${path}`);
+    sassLoadPathsConfig = sassLoadPaths.map(
+      (path) => `${process.cwd()}/${path}`,
+    );
 
     createCacheFolderIfNeeded();
 
     fs.writeFileSync(
       path.join(CACHE_FOLDER, SASS_LOAD_PATHS_CONFIG),
-      JSON.stringify(sassLoadPaths),
+      JSON.stringify(sassLoadPathsConfig),
     );
   }
 
@@ -63,7 +66,7 @@ export async function jestPreviewConfigure(
         '.css',
       );
 
-      const sassLoadPathsConfig = sassLoadPaths.reduce(
+      const sassLoadPathsCLIConfig = sassLoadPathsConfig.reduce(
         (currentConfig, nextLoadPath) =>
           `${currentConfig} --load-path ${nextLoadPath}`,
         '',
@@ -77,7 +80,7 @@ export async function jestPreviewConfigure(
       // Todo: Support import ~ for configured scss
       // Currently, we cannot find the option to pass `importer` to sass CLI: https://sass-lang.com/documentation/cli/dart-sass#options
       exec(
-        `./node_modules/.bin/sass ${cssFile} ${cssDestinationFile} --no-source-map ${sassLoadPathsConfig}`,
+        `./node_modules/.bin/sass ${cssFile} ${cssDestinationFile} --no-source-map ${sassLoadPathsCLIConfig}`,
         (err: any) => {
           if (err) {
             console.log(err);
