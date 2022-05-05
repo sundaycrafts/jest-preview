@@ -1,3 +1,15 @@
+# 0.2.0
+
+## Features
+
+- Auto preview UI whenever a test fails, you don't have to call `preview.debug()` manually.
+
+# 0.1.7
+
+## Fixes
+
+- Fix jest-preview postinstall script can't run on folder with space in name
+
 # 0.1.6
 
 ## Features

@@ -1,6 +1,6 @@
 {
   "name": "jest-preview",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "description": "Preview your HTML code while using Jest",
   "keywords": [
     "testing",
@@ -27,7 +27,7 @@
     "transforms"
   ],
   "scripts": {
-    "docs": "cd website && npm run start",
+    "docs": "cd website && npm run start -- --port 3001",
     "build:docs": "cd website && npm run build",
     "dev": "vite",
     "types": "tsc src/index.ts --declaration --emitDeclarationOnly --jsx react --esModuleInterop --outDir dist",
@@ -44,12 +44,13 @@
     "server:watch": "nodemon server/previewServer.js",
     "test:only": "NODE_ENV=test jest --watch --no-cache",
     "test:ci": "NODE_ENV=test jest",
-    "clearCache": "rimraf node_modules/.cache/jest-preview-dom && jest --clearCache",
+    "clearCache": "rimraf node_modules/.cache/jest-preview && jest --clearCache",
     "test": "npm-run-all -p server test:only",
     "prettier": "prettier server src --check",
     "prettier:fix": "npm run prettier -- --write",
     "sort": "npx sort-package-json",
-    "postinstall": "bash -c \"[[ $INIT_CWD == $PWD ]] && echo Inside Jest Preview. Do not clear Cache. || jest --clearCache || echo\""
+    "postinstall": "bash -c \"[[ '$INIT_CWD' == '$PWD' ]] && echo Inside Jest Preview. Do not clear Cache. || jest --clearCache || echo\"",
+    "publish:local": "npm publish --registry http://localhost:4873/"
   },
   "dependencies": {
     "camelcase": "^6.3.0",
